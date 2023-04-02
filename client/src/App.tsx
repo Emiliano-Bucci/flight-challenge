@@ -1,15 +1,11 @@
-import airports from "../airports.json";
+import { useEffect } from "react";
 
 function App() {
-  const data = airports.map((i) => {
-    return {
-      name: i.name,
-      code: i.city_code,
-      lat: i.coordinates.lat,
-      lng: i.coordinates.lon,
-    };
-  });
-  console.log(data);
+  useEffect(() => {
+    fetch("/api/user").then(async (_res) => {
+      console.log({ _res });
+    });
+  }, []);
   return <div>asda</div>;
 }
 
