@@ -1,20 +1,11 @@
 version: "3.8"
 services:
-  phptest:
-    container_name: php-apache
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    depends_on:
-      - db
-    volumes:
-      - ./src:/var/www/html/
-    ports:
-      - 8000:80
   db:
     container_name: db
     image: mysql
     restart: always
+    volumes:
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
     environment:
       MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
       MYSQL_DATABASE: MYSQL_DATABASE
@@ -31,3 +22,14 @@ services:
       PMA_HOST: db
     depends_on:
       - db
+  phptest:
+    container_name: php-apache
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - db
+    volumes:
+      - ./src:/var/www/html/
+    ports:
+      - 8000:80

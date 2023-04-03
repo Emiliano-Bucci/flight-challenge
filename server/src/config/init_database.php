@@ -60,3 +60,5 @@
 
   $init = new InitDatabase($db);
   $init->populate_database();
+  
+?>
