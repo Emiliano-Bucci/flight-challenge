@@ -12,4 +12,12 @@ export default defineConfig({
       exportAsDefault: true,
     }),
   ],
+  server: {
+    port: 3030,
+    host: true,
+  },
+  preview: {
+    port: 3000,
+    host: true,
+  },
 });
