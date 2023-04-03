@@ -5,7 +5,7 @@ services:
     image: mysql
     restart: always
     volumes:
-      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+      - ./server/dump.sql:/docker-entrypoint-initdb.d/dump.sql
     environment:
       MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
       MYSQL_DATABASE: MYSQL_DATABASE
@@ -25,11 +25,11 @@ services:
   phptest:
     container_name: php-apache
     build:
-      context: .
-      dockerfile: ./Dockerfile
+      context: ./
+      dockerfile: ./server/Dockerfile
     depends_on:
       - db
     volumes:
-      - ./src:/var/www/html/
+      - ./server/src:/var/www/html/
     ports:
       - 8000:80
