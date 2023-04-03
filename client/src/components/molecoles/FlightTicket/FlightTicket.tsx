@@ -34,7 +34,7 @@ export function FlightTicket({
       p="2rem"
       bg="light"
       gridTemplateColumns="1fr 120px"
-      gap="8rem"
+      gap="4rem"
       transition="border-color 140ms ease"
       _hover={{
         borderColor: "secondary",
@@ -42,7 +42,7 @@ export function FlightTicket({
     >
       <Grid
         gap="4rem"
-        gridTemplateColumns="auto 1fr auto"
+        gridTemplateColumns="1fr 1fr"
         w="100%"
         alignItems="center"
       >
