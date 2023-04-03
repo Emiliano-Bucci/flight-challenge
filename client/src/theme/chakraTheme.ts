@@ -26,6 +26,7 @@ export const chakraTheme = extendTheme({
       baseStyle: {
         fontSize: "inherit",
         borderRadius: "8px",
+        transition: "background-color 200ms ease",
       },
       variants: {
         sky_primary: {
@@ -34,6 +35,9 @@ export const chakraTheme = extendTheme({
           h: "auto",
           p: "1.6rem",
           color: "white",
+          _hover: {
+            bg: colors.primaryDark,
+          },
           _disabled: {
             _hover: {
               bg: `${colors.primary} !important`,

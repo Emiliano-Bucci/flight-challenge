@@ -87,36 +87,39 @@ function App() {
       <Flex justifyContent="center">
         <FlightSearch onSearch={setFlight} airports={airports} />
       </Flex>
-      <Flex flex="1" px="4rem" w="100%" justifyContent="center">
-        <Grid
-          bg="white"
-          maxW="1200px"
-          mt="4rem"
-          p="3.2rem"
-          boxShadow="2px 5.5px 12px rgba(0, 0, 0, 0.01), 2px 16px 52px rgba(0, 0, 0, 0.088)"
-          borderRadius="8px"
-          gap="1.6rem"
-          flex="1"
-        >
-          {flightData?.data?.map((flight) => {
-            const departureAirport = airports.find(
-              (a) => a.code === flight.code_departure
-            );
-            const arrivalAirport = airports.find(
-              (a) => a.code === flight.code_arrival
-            );
+      {flightData?.data && flightData.data.length > 0 && (
+        <Flex px="4rem" w="100%" justifyContent="center" h="auto">
+          <Grid
+            bg="white"
+            maxW="1200px"
+            mt="4rem"
+            p="3.2rem"
+            boxShadow="2px 5.5px 12px rgba(0, 0, 0, 0.01), 2px 16px 52px rgba(0, 0, 0, 0.088)"
+            borderRadius="8px"
+            alignContent="start"
+            gap="1.6rem"
+            flex="1"
+          >
+            {flightData?.data?.map((flight) => {
+              const departureAirport = airports.find(
+                (a) => a.code === flight.code_departure
+              );
+              const arrivalAirport = airports.find(
+                (a) => a.code === flight.code_arrival
+              );
 
-            return (
-              <FlightTicket
-                key={`${flight.code_departure}-${flight.code_arrival}-${flight.price}`}
-                departureAirport={departureAirport}
-                arrivalAirport={arrivalAirport}
-                flight={flight}
-              />
-            );
-          })}
-        </Grid>
-      </Flex>
+              return (
+                <FlightTicket
+                  key={`${flight.code_departure}-${flight.code_arrival}-${flight.price}`}
+                  departureAirport={departureAirport}
+                  arrivalAirport={arrivalAirport}
+                  flight={flight}
+                />
+              );
+            })}
+          </Grid>
+        </Flex>
+      )}
     </Flex>
   );
 }

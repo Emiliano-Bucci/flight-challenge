@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, Text } from "@chakra-ui/react";
+import { Flex, Grid, Text } from "@chakra-ui/react";
 import { Airport } from "../AirportSearch";
 import { FlightTicketInfoColumn } from "./FlightTicketInfoColumn";
 
@@ -33,7 +33,7 @@ export function FlightTicket({
       borderRadius="10px"
       p="2rem"
       bg="light"
-      gridTemplateColumns="1fr auto"
+      gridTemplateColumns="1fr 120px"
       gap="8rem"
       transition="border-color 140ms ease"
       _hover={{
@@ -61,7 +61,7 @@ export function FlightTicket({
           />
         )}
       </Grid>
-      <Flex w="auto" alignItems="center">
+      <Flex w="auto" alignItems="center" justifyContent="flex-end">
         <Grid justifyItems="end">
           <Text fontSize="4xl" fontWeight="700">
             {formatCurrency(flight.price)}

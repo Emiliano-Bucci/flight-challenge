@@ -6,10 +6,9 @@ import {
   PopoverContent,
   PopoverTrigger,
   useDisclosure,
-  useOutsideClick,
 } from "@chakra-ui/react";
 import { debounce } from "lodash";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 export type Airport = {
   code: string;
@@ -35,7 +34,6 @@ export function AirportSearch({ inputProps, airports, onChange }: Props) {
   const [searchValue, setSearchValue] = useState("");
 
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   const filteredAirports = useMemo(() => {
     return airports
@@ -50,20 +48,11 @@ export function AirportSearch({ inputProps, airports, onChange }: Props) {
     []
   );
 
-  useOutsideClick({
-    ref: wrapperRef,
-    handler: () => onClose(),
-  });
-  useEffect(() => {
-    handleMemoSearch.cancel();
-    handleMemoSearch(search);
-  }, [search]);
-
   return (
     <Popover
       matchWidth
-      isOpen={isOpen && searchValue.length >= 2}
-      autoFocus={false}
+      isOpen={isOpen && filteredAirports.length > 0}
+      initialFocusRef={inputRef}
     >
       <PopoverTrigger>
         <Input
@@ -75,8 +64,10 @@ export function AirportSearch({ inputProps, airports, onChange }: Props) {
           value={search}
           onClick={() => onOpen()}
           onChange={(e) => {
+            handleMemoSearch.cancel();
             const newValue = e.currentTarget.value;
             set(newValue);
+            handleMemoSearch(newValue);
 
             if (newValue.length === 0) {
               onClose();
