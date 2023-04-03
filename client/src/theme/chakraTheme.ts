@@ -34,6 +34,11 @@ export const chakraTheme = extendTheme({
           h: "auto",
           p: "1.6rem",
           color: "white",
+          _disabled: {
+            _hover: {
+              bg: `${colors.primary} !important`,
+            },
+          },
         },
       },
     },
@@ -54,7 +59,7 @@ export const chakraTheme = extendTheme({
       "#root": {
         display: "flex",
         width: "100%",
-        height: "100%",
+        minHeight: "100%",
       },
       button: {
         fontSize: "inherit",

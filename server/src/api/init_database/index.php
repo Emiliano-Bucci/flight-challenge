@@ -1,6 +1,6 @@
 <?php
 
-  include_once '../config/database.php';
+  include_once '../../config/database.php';
 
   $database = new Database();
   $db = $database->connect();
@@ -43,7 +43,7 @@
         $flight_sql = 'INSERT INTO flight (code_departure, code_arrival, transfers, price) VALUES (:code_departure, :code_arrival, :transfers, :price)';
         $flight_sql_statement = $this->conn->prepare($flight_sql);
 
-        $airport_sql = 'INSERT INTO airport (name, code, lat, lng) VALUES (:name, :code, :lat, :lng)';
+        $airport_sql = 'INSERT INTO airport (name, code,lat, lng) VALUES (:name, :code, :lat, :lng)';
         $airport_sql_statement = $this->conn->prepare($airport_sql);
 
         foreach($flights as $flight){
