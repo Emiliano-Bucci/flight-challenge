@@ -4,6 +4,7 @@ import { FlightSearch } from "components/organisms/FlightSearch";
 import { useEffect, useRef, useState } from "react";
 import { Airport, Flight } from "types";
 import { FlightResults } from "components/organisms/FlightResults";
+import Plane from "assets/plane-line.svg";
 
 const defaultFlightState = {
   code: "",
@@ -86,9 +87,28 @@ function App() {
         justifyContent="center"
         alignItems="center"
       >
-        <Text fontSize="8xl" color="primary" fontWeight="bold">
-          SmartSky
-        </Text>
+        <Flex position="relative" justifyContent="center" alignItems="center">
+          <Flex
+            zIndex="1"
+            position="absolute"
+            w="160px"
+            h="160px"
+            opacity="0.18"
+            transform="rotate(45deg)"
+            sx={{
+              svg: {
+                w: "100%",
+                h: "100%",
+                fill: "secondary",
+              },
+            }}
+          >
+            <Plane />
+          </Flex>
+          <Text zIndex="2" fontSize="8xl" color="primary" fontWeight="bold">
+            SmartSky
+          </Text>
+        </Flex>
       </Flex>
       <Flex justifyContent="center" mt="-9.6rem">
         <FlightSearch
