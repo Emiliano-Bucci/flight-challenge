@@ -1,3 +1,2 @@
 #!/bin/bash
-docker-compose -f server.yml up -d
-docker-compose -f client.yml up -d
+docker-compose -f server.yml -f client.yml build --no-cache & docker-compose -f server.yml -f client.yml up
