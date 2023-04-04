@@ -1,9 +1,9 @@
-import { Flex, Grid, Skeleton, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { FlightSearch } from "components/organisms/FlightSearch";
 import { useEffect, useRef, useState } from "react";
-import { FlightTicket } from "components/molecoles/FlightTicket";
 import { Airport, Flight } from "types";
+import { FlightResults } from "components/organisms/FlightResults";
 
 const defaultFlightState = {
   code: "",
@@ -24,11 +24,15 @@ function App() {
     arrival: defaultFlightState,
   });
   const [searchFlight, setSearchFlight] = useState(false);
-
+  const [showResults, setShowResults] = useState(false);
   const flightKey = `${flightState.departure.code}-${flightState.arrival.code}`;
   const prevFlightKey = useRef(flightKey);
 
-  const { data: flightData, isInitialLoading } = useQuery({
+  const {
+    data: flightData,
+    isInitialLoading,
+    status,
+  } = useQuery({
     queryKey: !searchFlight ? [prevFlightKey.current] : [flightKey],
     enabled: searchFlight,
     onSuccess() {
@@ -66,6 +70,11 @@ function App() {
   useEffect(() => {
     prevFlightKey.current = flightKey;
   }, [flightKey]);
+  useEffect(() => {
+    if (status === "success" && !showResults) {
+      setShowResults(true);
+    }
+  }, [status]);
 
   return (
     <Flex flexDir="column" flex="1" justifyContent="flex-start" pb="8rem">
@@ -84,48 +93,24 @@ function App() {
       <Flex justifyContent="center" mt="-9.6rem">
         <FlightSearch
           onChange={(values) => setFlight((p) => ({ ...p, ...values }))}
-          onSearch={() => setSearchFlight(true)}
           isLoading={isInitialLoading}
+          onSearch={() => {
+            if (status === "success" && !showResults) {
+              setShowResults(true);
+            }
+            setSearchFlight(true);
+          }}
         />
       </Flex>
-      {/* <Flex px="4rem" w="100%" justifyContent="center" h="auto">
-        <Grid
-          bg="white"
-          maxW="1200px"
-          mt="4rem"
-          p="4rem"
-          boxShadow="2px 5.5px 12px rgba(0, 0, 0, 0.01), 2px 16px 52px rgba(0, 0, 0, 0.088)"
-          borderRadius="12px"
-          alignContent="start"
-          gap="1.6rem"
-          flex="1"
-        >
-          {isInitialLoading &&
-            Array(6)
-              .fill(0)
-              .map((i, indx) => (
-                <Skeleton
-                  key={`flight-skeleton-${indx}`}
-                  w="100%"
-                  h="90px"
-                  borderRadius="10px"
-                />
-              ))}
-          {flightData?.data &&
-            flightData.data.length > 0 &&
-            !isInitialLoading &&
-            flightData?.data?.map((flight) => {
-              return (
-                <FlightTicket
-                  key={`${flight.code_departure}-${flight.code_arrival}-${flight.price}`}
-                  departureAirport={flightState.departure}
-                  arrivalAirport={flightState.arrival}
-                  flight={flight}
-                />
-              );
-            })}
-        </Grid>
-      </Flex> */}
+      {flightData?.data && flightData.data.length > 0 && !isInitialLoading && (
+        <FlightResults
+          isOpen={showResults}
+          onClose={() => setShowResults(false)}
+          results={flightData.data}
+          arrival={flightState.arrival}
+          departure={flightState.departure}
+        />
+      )}
     </Flex>
   );
 }

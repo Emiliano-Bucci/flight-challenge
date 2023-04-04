@@ -50,6 +50,11 @@ export function FlightSearch({ onChange, onSearch, isLoading }: Props) {
   });
   return (
     <chakra.form
+      bg="white"
+      p="4rem"
+      maxW="500px"
+      borderRadius="20px"
+      boxShadow="2px 5.5px 12px rgba(0, 0, 0, 0.01), 2px 16px 52px rgba(0, 0, 0, 0.088)"
       display="flex"
       flex="1"
       justifyContent="center"
@@ -59,16 +64,7 @@ export function FlightSearch({ onChange, onSearch, isLoading }: Props) {
         onSearch();
       }}
     >
-      <Grid
-        flex="1"
-        bg="white"
-        p="4rem"
-        w="100%"
-        maxW="500px"
-        borderRadius="16px"
-        boxShadow="2px 5.5px 12px rgba(0, 0, 0, 0.01), 2px 16px 52px rgba(0, 0, 0, 0.088)"
-        gap="2.4rem"
-      >
+      <Grid flex="1" w="100%" gap="2.4rem">
         <Grid gridTemplateColumns="1fr" gap="3.2rem" alignItems="center">
           <InputWrapper icon={<FlightTakeofFill />}>
             <AirportSearch

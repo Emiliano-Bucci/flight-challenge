@@ -75,7 +75,7 @@ export function AirportSearch({ inputProps, onChange }: Props) {
     return (
       airportsResponse?.data?.map((i) => ({
         ...i,
-        name: `${i.name} (${i.code})`,
+        label: `${i.name} (${i.code})`,
       })) ?? []
     );
   }, [airportsResponse]);
@@ -179,7 +179,7 @@ export function AirportSearch({ inputProps, onChange }: Props) {
                       cursor: "pointer",
                     }}
                   >
-                    {airport.name}
+                    {airport.label}
                   </ListItem>
                 );
               })}

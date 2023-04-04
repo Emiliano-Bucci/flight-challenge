@@ -44,6 +44,21 @@ export const chakraTheme = extendTheme({
             },
           },
         },
+        sky_secondary: {
+          fontSize: "1.6rem",
+          bg: colors.secondary,
+          h: "auto",
+          p: "1.6rem",
+          color: "white",
+          _hover: {
+            bg: colors.secondaryDark,
+          },
+          _disabled: {
+            _hover: {
+              bg: `${colors.secondary} !important`,
+            },
+          },
+        },
       },
     },
   },
