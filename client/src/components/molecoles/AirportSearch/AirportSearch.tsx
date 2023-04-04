@@ -1,51 +1,86 @@
 import {
   Box,
+  Flex,
+  Grid,
   Input,
   List,
   ListItem,
   Popover,
   PopoverContent,
   PopoverTrigger,
+  Skeleton,
+  Text,
   useDisclosure,
   useOutsideClick,
 } from "@chakra-ui/react";
 import { debounce } from "lodash";
-import { useMemo, useRef, useState } from "react";
-
-export type Airport = {
-  code: string;
-  id: string;
-  lat: string;
-  lng: string;
-  name: string;
-  city: string;
-};
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Airport } from "types";
+import Sad from "assets/emotion-sad-line.svg";
 
 type Props = {
-  airports: Airport[];
   inputProps: {
     placeholder: string;
   };
-  onChange(value: string): void;
+  onChange(value: Airport): void;
 };
 
-export function AirportSearch({ inputProps, airports, onChange }: Props) {
+export function AirportSearch({ inputProps, onChange }: Props) {
+  const queryClient = useQueryClient();
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const warapperRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [search, set] = useState("");
   const [searchValue, setSearchValue] = useState("");
 
-  const warapperRef = useRef<HTMLDivElement | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const queryKey = `airports-${searchValue}`;
+  const prevQueryKey = useRef(queryKey);
 
-  const filteredAirports = useMemo(() => {
-    return airports
-      .filter((i) => !!i.name)
-      .filter(
-        (i) =>
-          search && i.name.toLowerCase().includes(searchValue.toLowerCase())
-      );
-  }, [searchValue]);
+  const {
+    data: airportsResponse,
+    isInitialLoading,
+    isLoading,
+  } = useQuery({
+    queryKey: searchValue.length < 3 ? [prevQueryKey.current] : [queryKey],
+    enabled: !!searchValue && searchValue.length > 2,
+    queryFn: async ({ signal }): Promise<{ data: Airport[] }> => {
+      try {
+        const _response = await fetch(
+          "http://localhost:8000/api/airports/index.php",
+          {
+            signal,
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              search: searchValue.toLowerCase(),
+            }),
+          }
+        );
+        if (!_response.ok) {
+          throw new Error("AirportSearch error");
+        }
+        return await _response.json();
+      } catch (error) {
+        console.log(error);
+        return {
+          data: [],
+        };
+      }
+    },
+  });
+  const airports = useMemo(() => {
+    return (
+      airportsResponse?.data?.map((i) => ({
+        ...i,
+        name: `${i.name} (${i.code})`,
+      })) ?? []
+    );
+  }, [airportsResponse]);
+
   const handleMemoSearch = useMemo(
     () => debounce((value: string) => setSearchValue(value), 300),
     []
@@ -56,11 +91,15 @@ export function AirportSearch({ inputProps, airports, onChange }: Props) {
     handler: () => onClose(),
   });
 
+  useEffect(() => {
+    prevQueryKey.current = `airports-${searchValue}`;
+  }, [searchValue]);
+
   return (
     <Box ref={warapperRef}>
       <Popover
         matchWidth
-        isOpen={isOpen && filteredAirports.length > 0}
+        isOpen={isOpen && searchValue.length > 2}
         initialFocusRef={inputRef}
       >
         <PopoverTrigger>
@@ -73,6 +112,7 @@ export function AirportSearch({ inputProps, airports, onChange }: Props) {
             value={search}
             onClick={() => onOpen()}
             onChange={(e) => {
+              queryClient.cancelQueries({ queryKey: [queryKey] });
               handleMemoSearch.cancel();
               const newValue = e.currentTarget.value;
               set(newValue);
@@ -94,28 +134,56 @@ export function AirportSearch({ inputProps, airports, onChange }: Props) {
           boxShadow="2px 5.5px 12px rgba(0, 0, 0, 0.01), 2px 16px 52px rgba(0, 0, 0, 0.088)"
           maxH="480px"
         >
-          <List listStyleType="none" display="grid" overflowY="auto">
-            {filteredAirports.map((airport) => {
-              return (
-                <ListItem
-                  key={airport.id}
-                  p="0.48rem 0.8rem"
-                  borderRadius="4px"
-                  fontSize="1.48rem"
-                  onClick={() => {
-                    set(airport.name);
-                    onChange(airport.code);
-                    onClose();
-                  }}
-                  _hover={{
-                    bg: "#eee",
-                    cursor: "pointer",
-                  }}
-                >
-                  {airport.name}
-                </ListItem>
-              );
-            })}
+          <List
+            listStyleType="none"
+            display="grid"
+            overflowY="auto"
+            gap={isLoading && isInitialLoading ? "4px" : "0px"}
+          >
+            {isLoading &&
+              isInitialLoading &&
+              Array(4)
+                .fill(0)
+                .map((i, indx) => (
+                  <Skeleton
+                    h="24px"
+                    borderRadius="4px"
+                    key={`loading-result-${inputProps.placeholder}-${indx}`}
+                  />
+                ))}
+            {!isLoading && !isInitialLoading && airports.length === 0 && (
+              <Grid
+                justifyContent="center"
+                justifyItems="center"
+                py="1.6rem"
+                gap="0.8rem"
+              >
+                <Sad />
+                <Text>No results!</Text>
+              </Grid>
+            )}
+            {!isInitialLoading &&
+              airports.map((airport) => {
+                return (
+                  <ListItem
+                    key={airport.id}
+                    p="0.48rem 0.8rem"
+                    borderRadius="4px"
+                    fontSize="1.48rem"
+                    onClick={() => {
+                      set(airport.name);
+                      onChange(airport);
+                      onClose();
+                    }}
+                    _hover={{
+                      bg: "#eee",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {airport.name}
+                  </ListItem>
+                );
+              })}
           </List>
         </PopoverContent>
       </Popover>

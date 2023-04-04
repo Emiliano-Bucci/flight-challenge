@@ -1,18 +1,39 @@
-import { Flex, Grid, Text } from "@chakra-ui/react";
+import { Flex, Grid, Skeleton, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { Airport } from "./components/molecoles/AirportSearch";
 import { FlightSearch } from "components/organisms/FlightSearch";
-import { useState } from "react";
-import { Flight, FlightTicket } from "components/molecoles/FlightTicket";
+import { useEffect, useRef, useState } from "react";
+import { FlightTicket } from "components/molecoles/FlightTicket";
+import { Airport, Flight } from "types";
+
+const defaultFlightState = {
+  code: "",
+  id: "",
+  lat: "",
+  lng: "",
+  name: "",
+};
+
+type State = {
+  departure: Airport;
+  arrival: Airport;
+};
 
 function App() {
-  const [flight, setFlight] = useState({
-    departure: "",
-    arrival: "",
+  const [flightState, setFlight] = useState<State>({
+    departure: defaultFlightState,
+    arrival: defaultFlightState,
   });
-  const { data: flightData } = useQuery({
-    queryKey: [`${flight.departure}-${flight.arrival}`],
-    enabled: !!flight.arrival && !!flight.departure,
+  const [searchFlight, setSearchFlight] = useState(false);
+
+  const flightKey = `${flightState.departure.code}-${flightState.arrival.code}`;
+  const prevFlightKey = useRef(flightKey);
+
+  const { data: flightData, isInitialLoading } = useQuery({
+    queryKey: !searchFlight ? [prevFlightKey.current] : [flightKey],
+    enabled: searchFlight,
+    onSuccess() {
+      setSearchFlight(false);
+    },
     queryFn: async (): Promise<{ data: Flight[] }> => {
       try {
         const _response = await fetch(
@@ -23,8 +44,8 @@ function App() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              departure: flight.departure,
-              arrival: flight.arrival,
+              departure: flightState.departure.code,
+              arrival: flightState.arrival.code,
             }),
           }
         );
@@ -41,36 +62,10 @@ function App() {
       }
     },
   });
-  const { data: airportResponse } = useQuery({
-    queryKey: ["airports"],
-    queryFn: async (): Promise<{ data: Airport[] }> => {
-      try {
-        const _response = await fetch(
-          "http://localhost:8000/api/airports/index.php",
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (!_response.ok) {
-          throw new Error("AirportSearch error");
-        }
-        return await _response.json();
-      } catch (error) {
-        console.log(error);
-        return {
-          data: [],
-        };
-      }
-    },
-  });
 
-  const airports =
-    airportResponse?.data?.map((i) => ({
-      ...i,
-      name: `${i.name} (${i.code})`,
-    })) ?? [];
+  useEffect(() => {
+    prevFlightKey.current = flightKey;
+  }, [flightKey]);
 
   return (
     <Flex flexDir="column" flex="1" justifyContent="flex-start" pb="8rem">
@@ -85,41 +80,49 @@ function App() {
         </Text>
       </Flex>
       <Flex justifyContent="center">
-        <FlightSearch onSearch={setFlight} airports={airports} />
+        <FlightSearch
+          onChange={(values) => setFlight((p) => ({ ...p, ...values }))}
+          onSearch={() => setSearchFlight(true)}
+        />
       </Flex>
-      {flightData?.data && flightData.data.length > 0 && (
-        <Flex px="4rem" w="100%" justifyContent="center" h="auto">
-          <Grid
-            bg="white"
-            maxW="1200px"
-            mt="4rem"
-            p="3.2rem"
-            boxShadow="2px 5.5px 12px rgba(0, 0, 0, 0.01), 2px 16px 52px rgba(0, 0, 0, 0.088)"
-            borderRadius="8px"
-            alignContent="start"
-            gap="1.6rem"
-            flex="1"
-          >
-            {flightData?.data?.map((flight) => {
-              const departureAirport = airports.find(
-                (a) => a.code === flight.code_departure
-              );
-              const arrivalAirport = airports.find(
-                (a) => a.code === flight.code_arrival
-              );
-
+      <Flex px="4rem" w="100%" justifyContent="center" h="auto">
+        <Grid
+          bg="white"
+          maxW="1200px"
+          mt="4rem"
+          p="3.2rem"
+          boxShadow="2px 5.5px 12px rgba(0, 0, 0, 0.01), 2px 16px 52px rgba(0, 0, 0, 0.088)"
+          borderRadius="8px"
+          alignContent="start"
+          gap="1.6rem"
+          flex="1"
+        >
+          {isInitialLoading &&
+            Array(6)
+              .fill(0)
+              .map((i, indx) => (
+                <Skeleton
+                  key={`flight-skeleton-${indx}`}
+                  w="100%"
+                  h="90px"
+                  borderRadius="10px"
+                />
+              ))}
+          {flightData?.data &&
+            flightData.data.length > 0 &&
+            !isInitialLoading &&
+            flightData?.data?.map((flight) => {
               return (
                 <FlightTicket
                   key={`${flight.code_departure}-${flight.code_arrival}-${flight.price}`}
-                  departureAirport={departureAirport}
-                  arrivalAirport={arrivalAirport}
+                  departureAirport={flightState.departure}
+                  arrivalAirport={flightState.arrival}
                   flight={flight}
                 />
               );
             })}
-          </Grid>
-        </Flex>
-      )}
+        </Grid>
+      </Flex>
     </Flex>
   );
 }

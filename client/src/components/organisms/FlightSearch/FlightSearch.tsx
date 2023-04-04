@@ -1,21 +1,28 @@
-import { Airport } from "../../molecoles/AirportSearch";
 import { Button, Grid, chakra } from "@chakra-ui/react";
 import { AirportSearch } from "components/molecoles/AirportSearch";
-import { useState } from "react";
 
 import FlightTakeofFill from "./flight-takeoff-fill.svg";
+import { Airport } from "types";
+import { useState } from "react";
 
-type Props = {
-  airports: Airport[];
-  onSearch(props: { departure: string; arrival: string }): void;
+const defaultFlightState = {
+  code: "",
+  id: "",
+  lat: "",
+  lng: "",
+  name: "",
 };
 
-export function FlightSearch({ airports, onSearch }: Props) {
-  const [state, setState] = useState({
-    departure: "",
-    arrival: "",
-  });
+type Props = {
+  onChange(props: Partial<{ departure: Airport; arrival: Airport }>): void;
+  onSearch(): void;
+};
 
+export function FlightSearch({ onChange, onSearch }: Props) {
+  const [state, setState] = useState({
+    departure: defaultFlightState,
+    arrival: defaultFlightState,
+  });
   return (
     <chakra.form
       display="flex"
@@ -23,7 +30,8 @@ export function FlightSearch({ airports, onSearch }: Props) {
       justifyContent="center"
       onSubmit={(e) => {
         e.preventDefault();
-        onSearch(state);
+        onChange(state);
+        onSearch();
       }}
     >
       <Grid
@@ -43,7 +51,6 @@ export function FlightSearch({ airports, onSearch }: Props) {
           alignItems="center"
         >
           <AirportSearch
-            airports={airports}
             onChange={(value) => setState((p) => ({ ...p, departure: value }))}
             inputProps={{
               placeholder: "From",
@@ -51,7 +58,6 @@ export function FlightSearch({ airports, onSearch }: Props) {
           />
           <FlightTakeofFill />
           <AirportSearch
-            airports={airports}
             onChange={(value) => setState((p) => ({ ...p, arrival: value }))}
             inputProps={{
               placeholder: "To",
@@ -61,7 +67,7 @@ export function FlightSearch({ airports, onSearch }: Props) {
         <Button
           type="submit"
           variant="sky_primary"
-          isDisabled={!state.departure || !state.arrival}
+          isDisabled={!state.departure.code || !state.arrival.code}
         >
           Find my trip!
         </Button>

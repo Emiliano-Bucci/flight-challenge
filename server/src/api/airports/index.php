@@ -9,7 +9,16 @@
   $database = new Database();
   $PDOConn = $database->connect();
 
-  $airports_query = new Airports($PDOConn);
+  $search = null;
+
+  $request_params = json_decode(file_get_contents('php://input'), true);
+  $search_request_param = $request_params['search'];
+
+  if($search_request_param){
+    $search = $search_request_param;
+  }
+
+  $airports_query = new Airports($PDOConn, $search);
   $airports = $airports_query->read()->fetchAll(PDO::FETCH_OBJ);
 
   echo json_encode([

@@ -1,6 +1,7 @@
 import { Flex, Grid, Text } from "@chakra-ui/react";
-import { Airport } from "../AirportSearch";
+
 import { FlightTicketInfoColumn } from "./FlightTicketInfoColumn";
+import { Airport, Flight } from "types";
 
 function formatCurrency(value: string) {
   return new Intl.NumberFormat("en-US", {
@@ -8,13 +9,6 @@ function formatCurrency(value: string) {
     currency: "USD",
   }).format(Number(value));
 }
-
-export type Flight = {
-  code_departure: string;
-  code_arrival: string;
-  price: string;
-  transfers: string;
-};
 
 type Props = {
   departureAirport: Airport | undefined;
