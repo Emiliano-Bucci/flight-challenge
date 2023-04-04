@@ -71,21 +71,24 @@ function App() {
     <Flex flexDir="column" flex="1" justifyContent="flex-start" pb="8rem">
       <Flex
         bg="white"
-        p="8rem 4rem"
+        p="4rem"
+        h="50%"
         borderBottom="1px solid #eee"
         justifyContent="center"
+        alignItems="center"
       >
-        <Text fontSize="7xl" color="primary" fontWeight="bold">
+        <Text fontSize="8xl" color="primary" fontWeight="bold">
           SmartSky
         </Text>
       </Flex>
-      <Flex justifyContent="center">
+      <Flex justifyContent="center" mt="-9.6rem">
         <FlightSearch
           onChange={(values) => setFlight((p) => ({ ...p, ...values }))}
           onSearch={() => setSearchFlight(true)}
+          isLoading={isInitialLoading}
         />
       </Flex>
-      <Flex px="4rem" w="100%" justifyContent="center" h="auto">
+      {/* <Flex px="4rem" w="100%" justifyContent="center" h="auto">
         <Grid
           bg="white"
           maxW="1200px"
@@ -122,7 +125,7 @@ function App() {
               );
             })}
         </Grid>
-      </Flex>
+      </Flex> */}
     </Flex>
   );
 }

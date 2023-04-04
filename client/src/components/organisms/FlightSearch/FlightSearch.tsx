@@ -38,11 +38,12 @@ const defaultFlightState = {
 };
 
 type Props = {
+  isLoading: boolean;
   onChange(props: Partial<{ departure: Airport; arrival: Airport }>): void;
   onSearch(): void;
 };
 
-export function FlightSearch({ onChange, onSearch }: Props) {
+export function FlightSearch({ onChange, onSearch, isLoading }: Props) {
   const [state, setState] = useState({
     departure: defaultFlightState,
     arrival: defaultFlightState,
@@ -66,7 +67,6 @@ export function FlightSearch({ onChange, onSearch }: Props) {
         maxW="500px"
         borderRadius="16px"
         boxShadow="2px 5.5px 12px rgba(0, 0, 0, 0.01), 2px 16px 52px rgba(0, 0, 0, 0.088)"
-        mt="-4.8rem"
         gap="2.4rem"
       >
         <Grid gridTemplateColumns="1fr" gap="3.2rem" alignItems="center">
@@ -90,8 +90,11 @@ export function FlightSearch({ onChange, onSearch }: Props) {
           </InputWrapper>
         </Grid>
         <Button
+          isLoading={isLoading}
+          loadingText="Searching trip..."
           type="submit"
           variant="sky_primary"
+          spinnerPlacement="start"
           isDisabled={!state.departure.code || !state.arrival.code}
         >
           Find my trip!
