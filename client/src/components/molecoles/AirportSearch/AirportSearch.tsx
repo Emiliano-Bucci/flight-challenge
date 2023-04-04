@@ -1,6 +1,5 @@
 import {
   Box,
-  Flex,
   Grid,
   Input,
   List,
@@ -96,7 +95,7 @@ export function AirportSearch({ inputProps, onChange }: Props) {
   }, [searchValue]);
 
   return (
-    <Box ref={warapperRef}>
+    <Box ref={warapperRef} w="100%">
       <Popover
         matchWidth
         isOpen={isOpen && searchValue.length > 2}
@@ -146,7 +145,7 @@ export function AirportSearch({ inputProps, onChange }: Props) {
                 .fill(0)
                 .map((i, indx) => (
                   <Skeleton
-                    h="24px"
+                    h="30px"
                     borderRadius="4px"
                     key={`loading-result-${inputProps.placeholder}-${indx}`}
                   />
@@ -167,7 +166,7 @@ export function AirportSearch({ inputProps, onChange }: Props) {
                 return (
                   <ListItem
                     key={airport.id}
-                    p="0.48rem 0.8rem"
+                    p="0.64rem 0.8rem"
                     borderRadius="4px"
                     fontSize="1.48rem"
                     onClick={() => {
