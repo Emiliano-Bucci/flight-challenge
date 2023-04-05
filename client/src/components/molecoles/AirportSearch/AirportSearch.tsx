@@ -12,11 +12,11 @@ import {
   useDisclosure,
   useOutsideClick,
 } from "@chakra-ui/react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import Sad from "assets/emotion-sad-line.svg";
 import { debounce } from "lodash";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Airport } from "types";
-import Sad from "assets/emotion-sad-line.svg";
 
 type Props = {
   inputProps: {

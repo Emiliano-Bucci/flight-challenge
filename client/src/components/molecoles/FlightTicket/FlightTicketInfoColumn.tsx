@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
 import { Box, BoxProps, Grid } from "@chakra-ui/react";
+import { ReactNode } from "react";
 
 type Props = {
   title: string;

@@ -8,7 +8,6 @@ import {
   Grid,
   useMediaQuery,
 } from "@chakra-ui/react";
-import { Airport, Flight } from "types";
 import {
   GoogleMap,
   useJsApiLoader,
@@ -17,6 +16,7 @@ import {
 } from "@react-google-maps/api";
 import { FlightTicket } from "components/molecoles/FlightTicket";
 import { useState } from "react";
+import { Airport, Flight } from "types";
 
 type Props = {
   isOpen: boolean;

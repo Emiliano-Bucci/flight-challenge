@@ -1,9 +1,9 @@
 import { Flex, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import Plane from "assets/plane-line.svg";
 import { FlightSearch } from "components/organisms/FlightSearch";
 import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { Airport, Flight } from "types";
-import Plane from "assets/plane-line.svg";
 
 const LazyFlightsResult = lazy(
   () => import("components/organisms/FlightResults")

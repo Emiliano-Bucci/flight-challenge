@@ -1,6 +1,5 @@
-import { Flex, Grid, Text } from "@chakra-ui/react";
-
 import { FlightTicketInfoColumn } from "./FlightTicketInfoColumn";
+import { Flex, Grid, Text } from "@chakra-ui/react";
 import { Airport, Flight } from "types";
 
 function formatCurrency(value: string) {

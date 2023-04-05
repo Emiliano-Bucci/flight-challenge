@@ -1,9 +1,9 @@
 import { BoxProps, Button, Flex, Grid, chakra } from "@chakra-ui/react";
-import { AirportSearch } from "components/molecoles/AirportSearch";
-import FlightTakeofFill from "assets/flight-takeoff-fill.svg";
 import FlightLandFill from "assets/flight-land-line.svg";
-import { Airport } from "types";
+import FlightTakeofFill from "assets/flight-takeoff-fill.svg";
+import { AirportSearch } from "components/molecoles/AirportSearch";
 import { ReactNode, useState } from "react";
+import { Airport } from "types";
 
 function InputWrapper({
   children,
