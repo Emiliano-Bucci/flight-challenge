@@ -33,3 +33,8 @@ services:
       - ./server/src:/var/www/html/
     ports:
       - 8000:80
+  reactapp:
+    build: ./client
+    container_name: react_vite_app
+    ports:
+      - "3000:3000"
