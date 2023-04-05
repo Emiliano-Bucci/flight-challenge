@@ -1,0 +1,1 @@
+docker-compose -f server.yml build --no-cache & docker-compose -f server.yml up
