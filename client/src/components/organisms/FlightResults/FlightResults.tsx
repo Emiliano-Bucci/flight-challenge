@@ -81,7 +81,13 @@ export function FlightResults({
               xl: "repeat(2, 1fr)",
             }}
           >
-            <Grid w="100%" gap="2rem" overflowY="auto" alignSelf="start">
+            <Grid
+              w="100%"
+              gap="2rem"
+              overflowY="auto"
+              alignSelf="start"
+              h={isMobile ? "100%" : "auto"}
+            >
               {results.map((flight) => {
                 return (
                   <FlightTicket
