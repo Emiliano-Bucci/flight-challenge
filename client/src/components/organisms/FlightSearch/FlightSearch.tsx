@@ -51,13 +51,16 @@ export function FlightSearch({ onChange, onSearch, isLoading }: Props) {
   return (
     <chakra.form
       bg="white"
-      p="4rem"
       maxW="500px"
       borderRadius="20px"
       boxShadow="2px 5.5px 12px rgba(0, 0, 0, 0.01), 2px 16px 52px rgba(0, 0, 0, 0.088)"
       display="flex"
       flex="1"
       justifyContent="center"
+      p={{
+        base: "2.4rem",
+        lg: "4rem",
+      }}
       onSubmit={(e) => {
         e.preventDefault();
         onChange(state);

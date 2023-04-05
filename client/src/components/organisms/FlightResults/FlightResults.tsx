@@ -6,6 +6,7 @@ import {
   DrawerOverlay,
   Flex,
   Grid,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { Airport, Flight } from "types";
 import {
@@ -15,7 +16,6 @@ import {
   Polyline,
 } from "@react-google-maps/api";
 import { FlightTicket } from "components/molecoles/FlightTicket";
-import FlightTakeofFill from "assets/flight-takeoff-fill.svg";
 import { useState } from "react";
 
 type Props = {
@@ -33,6 +33,7 @@ export function FlightResults({
   departure,
   arrival,
 }: Props) {
+  const [isMobile] = useMediaQuery("(max-width: 1024px)");
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: "AIzaSyDlQiv_MnZ-4GNXt9eXNZ4FZprT8NdmuDY",
@@ -53,7 +54,16 @@ export function FlightResults({
   return (
     <Drawer isOpen={isOpen} onClose={onClose} placement="bottom">
       <DrawerOverlay />
-      <DrawerContent h="88%" p="4rem">
+      <DrawerContent
+        p={{
+          base: "2.4rem",
+          lg: "4rem",
+        }}
+        h={{
+          base: "100%",
+          xl: "88%",
+        }}
+      >
         <Flex
           flexDir="column"
           mx="auto"
@@ -63,13 +73,15 @@ export function FlightResults({
           h="100%"
         >
           <Grid
-            gridTemplateColumns="repeat(2, 1fr)"
             flex="1"
             gap="4rem"
             overflow="hidden"
-            alignItems="start"
+            gridTemplateColumns={{
+              base: "1fr",
+              xl: "repeat(2, 1fr)",
+            }}
           >
-            <Grid w="100%" gap="2rem" overflowY="auto">
+            <Grid w="100%" gap="2rem" overflowY="auto" alignSelf="start">
               {results.map((flight) => {
                 return (
                   <FlightTicket
@@ -81,7 +93,7 @@ export function FlightResults({
                 );
               })}
             </Grid>
-            {isLoaded && (
+            {isLoaded && !isMobile && (
               <GoogleMap
                 center={averageCoords}
                 onUnmount={() => setMarkers(false)}

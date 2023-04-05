@@ -95,9 +95,17 @@ export function AirportSearch({ inputProps, onChange }: Props) {
   }, [searchValue]);
 
   return (
-    <Box ref={warapperRef} w="100%">
+    <Box
+      ref={warapperRef}
+      w="100%"
+      position="relative"
+      sx={{
+        ".chakra-popover__popper": {
+          w: "100%",
+        },
+      }}
+    >
       <Popover
-        matchWidth
         isOpen={isOpen && searchValue.length > 2}
         initialFocusRef={inputRef}
       >
@@ -127,11 +135,15 @@ export function AirportSearch({ inputProps, onChange }: Props) {
           />
         </PopoverTrigger>
         <PopoverContent
+          rootProps={{ style: { right: "auto" } }}
           w="100%"
           p="1.2rem"
           borderRadius="8px"
           boxShadow="2px 5.5px 12px rgba(0, 0, 0, 0.01), 2px 16px 52px rgba(0, 0, 0, 0.088)"
-          maxH="480px"
+          maxH={{
+            base: "200px",
+            lg: "400px",
+          }}
         >
           <List
             listStyleType="none"

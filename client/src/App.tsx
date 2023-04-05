@@ -1,10 +1,13 @@
 import { Flex, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { FlightSearch } from "components/organisms/FlightSearch";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { Airport, Flight } from "types";
-import { FlightResults } from "components/organisms/FlightResults";
 import Plane from "assets/plane-line.svg";
+
+const LazyFlightsResult = lazy(
+  () => import("components/organisms/FlightResults")
+);
 
 const defaultFlightState = {
   code: "",
@@ -78,7 +81,12 @@ function App() {
   }, [status]);
 
   return (
-    <Flex flexDir="column" flex="1" justifyContent="flex-start" pb="8rem">
+    <Flex
+      flexDir="column"
+      flex="1"
+      justifyContent="flex-start"
+      overflow="hidden"
+    >
       <Flex
         bg="white"
         p="4rem"
@@ -110,7 +118,13 @@ function App() {
           </Text>
         </Flex>
       </Flex>
-      <Flex justifyContent="center" mt="-9.6rem">
+      <Flex
+        justifyContent="center"
+        mt={{
+          base: "-5.6rem",
+          xl: "-9.6rem",
+        }}
+      >
         <FlightSearch
           onChange={(values) => setFlight((p) => ({ ...p, ...values }))}
           isLoading={isInitialLoading}
@@ -123,13 +137,15 @@ function App() {
         />
       </Flex>
       {flightData?.data && flightData.data.length > 0 && !isInitialLoading && (
-        <FlightResults
-          isOpen={showResults}
-          onClose={() => setShowResults(false)}
-          results={flightData.data}
-          arrival={flightState.arrival}
-          departure={flightState.departure}
-        />
+        <Suspense fallback={null}>
+          <LazyFlightsResult
+            isOpen={showResults}
+            onClose={() => setShowResults(false)}
+            results={flightData.data}
+            arrival={flightState.arrival}
+            departure={flightState.departure}
+          />
+        </Suspense>
       )}
     </Flex>
   );

@@ -1,1 +1,1 @@
-export * from "./FlightResults";
+export { FlightResults as default } from "./FlightResults";

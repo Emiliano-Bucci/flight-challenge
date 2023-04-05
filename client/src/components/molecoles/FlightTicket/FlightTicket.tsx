@@ -25,26 +25,38 @@ export function FlightTicket({
     <Grid
       border="1px solid #ccc"
       borderRadius="10px"
-      p="2rem"
       bg="light"
       gridTemplateColumns="1fr 120px"
-      gap="4rem"
       transition="border-color 140ms ease"
+      gap={{
+        base: "2.4rem",
+        lg: "4rem",
+      }}
+      p={{
+        base: "1.24rem",
+        lg: "2rem",
+      }}
       _hover={{
         borderColor: "secondary",
       }}
     >
       <Grid
-        gap="4rem"
-        gridTemplateColumns="1fr 1fr"
         w="100%"
         alignItems="center"
+        gridTemplateColumns={{
+          base: "1fr",
+          md: "1fr 1fr",
+        }}
+        gap={{
+          base: "1.6rem",
+          lg: "4rem",
+        }}
       >
         {departureAirport && (
           <FlightTicketInfoColumn
-            justifyContent="start"
             textAlign="left"
             title="Partenza"
+            justifyContent="start"
             content={departureAirport.name}
           />
         )}
@@ -52,12 +64,19 @@ export function FlightTicket({
           <FlightTicketInfoColumn
             title="Arrivo"
             content={arrivalAirport.name}
+            justifyContent="start"
           />
         )}
       </Grid>
       <Flex w="auto" alignItems="center" justifyContent="flex-end">
         <Grid justifyItems="end">
-          <Text fontSize="4xl" fontWeight="700">
+          <Text
+            fontWeight="700"
+            fontSize={{
+              base: "3xl",
+              lg: "4xl",
+            }}
+          >
             {formatCurrency(flight.price)}
           </Text>
           <Text fontSize="12px">

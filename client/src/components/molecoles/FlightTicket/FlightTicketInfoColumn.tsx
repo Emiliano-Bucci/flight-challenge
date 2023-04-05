@@ -8,7 +8,7 @@ type Props = {
 
 export function FlightTicketInfoColumn({ title, content, ...rest }: Props) {
   return (
-    <Grid textAlign="right" gap="0.4rem" {...rest}>
+    <Grid gap="0.4rem" {...rest}>
       <Box fontSize="12px" fontWeight="700" color="secondaryDark">
         {title}
       </Box>

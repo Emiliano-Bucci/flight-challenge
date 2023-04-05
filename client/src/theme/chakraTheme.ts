@@ -64,6 +64,9 @@ export const chakraTheme = extendTheme({
   },
   styles: {
     global: {
+      "*": {
+        boxSizing: "border-box",
+      },
       html: {
         fontSize: "62.5%",
         width: "100%",
@@ -74,6 +77,7 @@ export const chakraTheme = extendTheme({
         fontSize: "1.6rem",
         width: "100%",
         height: "100%",
+        overflow: "hidden",
       },
       "#root": {
         display: "flex",
